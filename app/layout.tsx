@@ -1,5 +1,14 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Inter, Noto_Serif } from 'next/font/google';
+import { cn } from '@/lib/utils';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from 'next-themes';
+import { Providers } from '@/components/providers';
+
+const notoSerif = Noto_Serif({subsets:['latin'],variable:'--font-serif'});
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -8,8 +17,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={`h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn('h-full', 'antialiased', 'font-sans', inter.variable, "font-serif", notoSerif.variable)}
+    >
+      <body className="min-h-full flex flex-col">
+        <TooltipProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Providers>{children}</Providers>
+          </ThemeProvider>
+        </TooltipProvider>
+      </body>
     </html>
   );
 }
