@@ -5,8 +5,9 @@ import { cn } from '@/lib/utils';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from 'next-themes';
 import { Providers } from '@/components/providers';
+import AppHeader from '@/app/(infrastructure)/components/AppHeader';
 
-const notoSerif = Noto_Serif({subsets:['latin'],variable:'--font-serif'});
+const notoSerif = Noto_Serif({ subsets: ['latin'], variable: '--font-serif' });
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -20,9 +21,16 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn('h-full', 'antialiased', 'font-sans', inter.variable, "font-serif", notoSerif.variable)}
+      className={cn(
+        'h-full',
+        'antialiased',
+        'font-sans',
+        inter.variable,
+        'font-serif',
+        notoSerif.variable,
+      )}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="h-dvh flex flex-col">
         <TooltipProvider>
           <ThemeProvider
             attribute="class"
@@ -30,7 +38,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             enableSystem
             disableTransitionOnChange
           >
-            <Providers>{children}</Providers>
+            <Providers>
+              <AppHeader />
+              <main className="flex-1">{children}</main>
+            </Providers>
           </ThemeProvider>
         </TooltipProvider>
       </body>
