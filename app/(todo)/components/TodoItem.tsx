@@ -1,36 +1,8 @@
-'use client';
-
-import { useTransition } from 'react';
-import { toast } from 'sonner';
-
 import { AppButton } from '@/app/(shared)/components/AppButton';
 import { deleteTodo, updateTodo } from '@/app/(todo)/actions';
-import { Spinner } from '@/components/ui/spinner';
 import type { Todo } from '@/drizzle/schemas';
 
 export default function TodoItem({ todo }: { todo: Todo }) {
-  const [isPending, startTransition] = useTransition();
-
-  function handleToggle() {
-    startTransition(async () => {
-      try {
-        await updateTodo(todo.id, { completed: !todo.completed });
-      } catch {
-        toast.error('Failed to update the todo. Please try again.');
-      }
-    });
-  }
-
-  function handleDelete() {
-    startTransition(async () => {
-      try {
-        await deleteTodo(todo.id);
-      } catch {
-        toast.error('Failed to delete the todo. Please try again.');
-      }
-    });
-  }
-
   return (
     <li className="flex items-center justify-between gap-4 rounded-lg border bg-card px-4 py-3">
       <span
@@ -44,23 +16,25 @@ export default function TodoItem({ todo }: { todo: Todo }) {
       </span>
 
       <div className="flex shrink-0 items-center gap-2">
-        <AppButton
-          variant={todo.completed ? 'secondary' : 'default'}
-          size="sm"
-          disabled={isPending}
-          onClick={handleToggle}
+        <form
+          action={updateTodo.bind(null, todo.id, {
+            completed: !todo.completed,
+          })}
         >
-          {isPending ? <Spinner /> : todo.completed ? 'Undo' : 'Done'}
-        </AppButton>
+          <AppButton
+            type="submit"
+            variant={todo.completed ? 'secondary' : 'default'}
+            size="sm"
+          >
+            {todo.completed ? 'Undo' : 'Done'}
+          </AppButton>
+        </form>
 
-        <AppButton
-          variant="destructive"
-          size="sm"
-          disabled={isPending}
-          onClick={handleDelete}
-        >
-          {isPending ? <Spinner /> : 'Delete'}
-        </AppButton>
+        <form action={deleteTodo.bind(null, todo.id)}>
+          <AppButton type="submit" variant="destructive" size="sm">
+            Delete
+          </AppButton>
+        </form>
       </div>
     </li>
   );
