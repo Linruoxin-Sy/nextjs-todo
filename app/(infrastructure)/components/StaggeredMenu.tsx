@@ -21,7 +21,7 @@ export interface StaggeredMenuProps {
   menuButtonColor?: string;
   openMenuButtonColor?: string;
   accentColor?: string;
-  isFixed: boolean;
+  isFixed?: boolean;
   changeMenuColorOnOpen?: boolean;
   closeOnClickAway?: boolean;
   onMenuOpen?: () => void;

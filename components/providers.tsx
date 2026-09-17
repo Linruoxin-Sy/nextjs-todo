@@ -21,7 +21,7 @@ export function Providers({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider
         authClient={authClient}
-        redirectTo="/settings/account"
+        redirectTo="/"
         emailAndPassword={{ requireEmailVerification: false }}
         navigate={({ to, replace }) =>
           replace ? router.replace(to) : router.push(to)

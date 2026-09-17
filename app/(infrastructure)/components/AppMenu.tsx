@@ -8,7 +8,6 @@ export default function AppMenu() {
   return (
     <div className="fixed top-0 left-0 h-dvh">
       <StaggeredMenu
-        isFixed
         position="left"
         items={menuItems}
         displayItemNumbering={true}
