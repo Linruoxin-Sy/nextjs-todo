@@ -40,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           >
             <Providers>
               <AppHeader />
-              <main className="flex-1">{children}</main>
+              <main className="flex-1 flex">{children}</main>
             </Providers>
           </ThemeProvider>
         </TooltipProvider>
