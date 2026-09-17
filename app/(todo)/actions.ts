@@ -1,7 +1,7 @@
 'use server';
 
 import { and, eq } from 'drizzle-orm';
-import { revalidatePath, unstable_cache, updateTag } from 'next/cache';
+import { unstable_cache, updateTag } from 'next/cache';
 import { headers } from 'next/headers';
 
 import { auth } from '@/lib/auth';
@@ -50,14 +50,17 @@ export async function getTodos(): Promise<Todo[]> {
 /**
  * 写操作后失效缓存。
  *
- * - `updateTag` 只能在 Server Action 里用，且会让下一次读取直接等待新数据
- *   （读己之写），适合 todo 这种“改完必须立刻看到”的场景；
+ * 只按 tag 失效，不绑定任何页面路径：这份数据以后在别的路由渲染（或同一页多处渲染），
+ * 也会一起刷新，不用回来改这里。
+ *
+ * - `updateTag` 只能在 Server Action 里用，且让下一次读取直接等待新数据（读己之写）；
+ *   action 的响应会把重新渲染后的数据带回来，所以 UI 不需要额外的路径级刷新。
  *   换成 `revalidateTag(tag, 'max')` 则是 stale-while-revalidate，会先返回旧值。
- * - `revalidatePath` 负责刷掉 `/` 的客户端路由缓存。
+ * - 若以后出现“客户端缓存住的动态数据”不刷新的情况，再补 `refresh()`
+ *   （Next 16 新增，同样不绑定路径），目前用不到。
  */
 function revalidateTodos() {
   updateTag(TODOS_CACHE_TAG);
-  revalidatePath('/');
 }
 
 export async function createTodo(formData: FormData) {
