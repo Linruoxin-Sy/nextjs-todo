@@ -42,9 +42,18 @@ export async function updateTodo(
 
   if (!session) return;
 
+  const { title, completed } = values;
+
+  // 显式传了 title 但为空 → 不写库
+  if (title !== undefined && !title.trim()) return;
+
   await db
     .update(todos)
-    .set({ ...values, updatedAt: new Date() })
+    .set({
+      ...(title !== undefined ? { title: title.trim() } : {}),
+      ...(completed !== undefined ? { completed } : {}),
+      updatedAt: new Date(),
+    })
     .where(and(eq(todos.id, id), eq(todos.userId, session.user.id)));
 
   revalidatePath('/');
