@@ -13,7 +13,9 @@ export default function AppHeader() {
       </AppSignIn>
       <AppTitle />
       <AppSignIn>
-        <UserButton className="fixed top-0 right-0 z-50 m-4" />
+        <div className="fixed top-0 right-0 z-50 m-2">
+          <UserButton className="w-14 md:w-fit" />
+        </div>
       </AppSignIn>
     </header>
   );
